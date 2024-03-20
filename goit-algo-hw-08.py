@@ -1,18 +1,21 @@
+import heapq
+
 def minimize_costs(cables):
-    connections = [(i, j, cables[i] + cables[j]) for i in range(len(cables)) for j in range(i+1, len(cables))]
-    connections.sort(key=lambda x: x[2])  # сортуємо за зростанням суми довжин
+    heapq.heapify(cables)  # перетворюємо список кабелів у min-кучу
 
     total_cost = 0
-    while len(connections) > 0:
-        # беремо найменший з'єднувач
-        i, j, cost = connections.pop(0)
+    while len(cables) > 1:
+        # вибираємо два найменших кабелі та їх вартість
+        shortest1 = heapq.heappop(cables)
+        shortest2 = heapq.heappop(cables)
+        cost = shortest1 + shortest2
         total_cost += cost
 
-        # об'єднуємо кабелі та додаємо новий кабель до списку
-        cables.append(cables[i] + cables[j])
+        # додаємо новий кабель до min-кучі
+        heapq.heappush(cables, cost)
 
     return total_cost
 
-cables = [2, 3, 4, 6, 8]
+cables = [1,1,1]
 min_cost = minimize_costs(cables)
 print("Мінімальні витрати:", min_cost)
